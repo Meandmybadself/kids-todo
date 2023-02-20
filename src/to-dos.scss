@@ -1,0 +1,25 @@
+* {
+    font-family: Helvetica, Arial, sans-serif;
+    text-align: center;
+    font-weight: 800;
+}
+h1 {
+    font-size: 3em;
+}
+ul {
+    list-style: none;
+    padding: 0;
+    li {
+        border: 1px solid #eee;
+        border-top: 0;
+        padding: 20px;
+        font-size: 1.5em;
+        background: #fff;
+        transition: background 0.3s ease-out, color 0.3s ease-out;
+        cursor: pointer;
+        &.completed {
+            background: black;
+            color: white;
+        }
+    }
+}
