@@ -12,6 +12,7 @@
     "build": "parcel build index.html"
   },
   "dependencies": {
+    "@webcomponents/custom-elements": "^1.5.1",
     "lit": "^2.6.1",
     "lodash": "^4.17.21"
   },

@@ -1,3 +1,5 @@
+import '@webcomponents/custom-elements';
+import 'lit/polyfill-support.js'
 import { LitElement, html } from 'lit'
 import { customElement, state } from 'lit/decorators.js'
 import importedStyles from 'litsass:./to-dos.scss'
