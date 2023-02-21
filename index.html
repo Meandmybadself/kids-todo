@@ -3,9 +3,6 @@
   <head>
     <meta charset="UTF-8"/>
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Rubik&display=swap" rel="stylesheet">
     <meta name="viewport" content="width=device-width, user-scalable=no"/>
     <title>Todo</title>
     <style>
@@ -17,10 +14,13 @@
         padding: 0;
       }
     </style>
-    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle.js"></script>
-    <script type="module" src="/src/to-dos.ts"></script>
+    <link rel="stylesheet" href="/src/to-dos.scss">
   </head>
   <body>
-    <to-dos></to-dos>
+    <div id="root">
+      <h1></h1>
+      <ul id="todos"></ul>
+    </div>
   </body>
+  <script type="module" src="/src/to-dos.ts"></script>
 </html>

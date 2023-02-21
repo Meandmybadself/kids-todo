@@ -1,8 +1,3 @@
-import 'lit/polyfill-support.js'
-import { LitElement, html } from 'lit'
-import { customElement, state } from 'lit/decorators.js'
-import importedStyles from 'litsass:./to-dos.scss'
-
 type Todo = {
   daysOfTheWeek: string[]
   startTime: number
@@ -15,13 +10,9 @@ const HOUR_1 = 3600
 const AM_600 = HOUR_1 * 6
 const AM_800 = HOUR_1 * 8
 const PM_200 = HOUR_1 * 14
-const PM_600 = HOUR_1 * 22
+const PM_600 = HOUR_1 * 23
 
-@customElement('to-dos')
-export class Element extends LitElement {
-  static styles = importedStyles
-
-  @state()
+export class TodoList {
   private _completedTodos: string[];
 
   private _todos: Todo[] = [
@@ -83,15 +74,19 @@ export class Element extends LitElement {
     }
   ]
 
-  @state()
   private _dayOfWeek: string
 
-  constructor() {
-    super()
-    // Fetch from local storage
-    // this._completedTodos = window.localStorage.getItem('completedTodos') ? JSON.parse(window.localStorage.getItem('completedTodos')!) : []
+  private _heading: HTMLElement
 
-    this._completedTodos = []
+  private _list: HTMLUListElement
+
+  constructor() {
+
+    this._heading = document.querySelector('h1')!
+    this._list = document.querySelector('ul')!
+
+    // Fetch from local storage
+    this._completedTodos = window.localStorage.getItem('completedTodos') ? JSON.parse(window.localStorage.getItem('completedTodos')!) : []
 
     this._dayOfWeek = this._getDayOfWeek()
 
@@ -101,9 +96,24 @@ export class Element extends LitElement {
       if (this._dayOfWeek !== this._getDayOfWeek()) {
         this._completedTodos = []
         window.localStorage.setItem('completedTodos', '[]')
+        this._requestUpdate()
       }
-      this.requestUpdate()
     }, 60000)
+    this._requestUpdate()
+  }
+
+  private _requestUpdate() {
+    this._dayOfWeek = this._getDayOfWeek()
+    this._heading.textContent = `To-dos / ${this._dayOfWeek}`
+
+    const newList = this._getTodoItems().join('')
+    console.log('..')
+    if (newList !== this._list.innerHTML) {
+      this._list.innerHTML = newList
+      this._list.querySelectorAll('li').forEach(li => {
+        li.addEventListener('click', this._click.bind(this))
+      })
+    }
   }
 
   private _getDayOfWeek() {
@@ -122,41 +132,26 @@ export class Element extends LitElement {
     })
   }
 
-  private _click(item: string) {
+  private _click(e: Event) {
+    const el = e.target as HTMLElement
+    const item = el.textContent!
     // if this item is already completed, remove it from the list
     if (this._completedTodos.includes(item)) {
       this._completedTodos = this._completedTodos.filter(completedItem => completedItem !== item)
+      el.classList.remove('completed')
+
       return
     } else {
-      this._completedTodos = [...this._completedTodos, item]
+      this._completedTodos.push(item)
+      el.classList.add('completed')
     }
     window.localStorage.setItem('completedTodos', JSON.stringify(this._completedTodos))
   }
 
   private _getTodoItems() {
     const todos = this._getTodosForNow()
-    return todos.map(todo => {
-      return todo.items.map(item => {
-        return html`<li
-          class=${this._completedTodos.includes(item) ? 'completed' : ''}
-          @click=${() => this._click(item)}
-        >${item}</li>`
-      })
-    })
-  }
-
-  render() {
-    return html`<div>
-      <h1>To-dos / ${this._dayOfWeek}</h1>
-      <ul>
-        ${this._getTodoItems()}
-      </ul>
-    </div>`
+    return todos.map(todoGroup => todoGroup.items.map(item => `<li class=${this._completedTodos.includes(item) ? 'completed' : ''}>${item}</li>`)).flat()
   }
 }
 
-declare global {
-  interface HTMLElementTagNameMap {
-    'to-dos': Element
-  }
-}
+new TodoList()
