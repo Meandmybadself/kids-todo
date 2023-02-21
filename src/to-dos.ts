@@ -1,4 +1,3 @@
-import '@webcomponents/custom-elements';
 import 'lit/polyfill-support.js'
 import { LitElement, html } from 'lit'
 import { customElement, state } from 'lit/decorators.js'
@@ -16,7 +15,7 @@ const HOUR_1 = 3600
 const AM_600 = HOUR_1 * 6
 const AM_800 = HOUR_1 * 8
 const PM_200 = HOUR_1 * 14
-const PM_600 = HOUR_1 * 18
+const PM_600 = HOUR_1 * 22
 
 @customElement('to-dos')
 export class Element extends LitElement {
