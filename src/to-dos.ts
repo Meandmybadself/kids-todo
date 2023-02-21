@@ -6,7 +6,6 @@ type Todo = {
 }
 
 const HOUR_1 = 3600
-
 const AM_600 = HOUR_1 * 6
 const AM_800 = HOUR_1 * 8
 const PM_200 = HOUR_1 * 14
@@ -14,6 +13,9 @@ const PM_600 = HOUR_1 * 23
 
 export class TodoList {
   private _completedTodos: string[];
+  private _dayOfWeek: string
+  private _heading: HTMLElement
+  private _list: HTMLUListElement
 
   private _todos: Todo[] = [
     {
@@ -74,15 +76,8 @@ export class TodoList {
     }
   ]
 
-  private _dayOfWeek: string
-
-  private _heading: HTMLElement
-
-  private _list: HTMLUListElement
 
   constructor() {
-
-    this._heading = document.querySelector('h1')!
     this._list = document.querySelector('ul')!
 
     // Fetch from local storage
@@ -104,13 +99,13 @@ export class TodoList {
 
   private _requestUpdate() {
     this._dayOfWeek = this._getDayOfWeek()
-    this._heading.textContent = `To-dos / ${this._dayOfWeek}`
+    document.querySelector('h1')!.textContent = `${this._dayOfWeek}`
 
     const newList = this._getTodoItems().join('')
-    console.log('..')
     if (newList !== this._list.innerHTML) {
       this._list.innerHTML = newList
-      this._list.querySelectorAll('li').forEach(li => {
+
+      Array.from(this._list.querySelectorAll('li')).forEach(li => {
         li.addEventListener('click', this._click.bind(this))
       })
     }
@@ -136,10 +131,9 @@ export class TodoList {
     const el = e.target as HTMLElement
     const item = el.textContent!
     // if this item is already completed, remove it from the list
-    if (this._completedTodos.includes(item)) {
+    if (this._completedTodos.indexOf(item) > -1) {
       this._completedTodos = this._completedTodos.filter(completedItem => completedItem !== item)
       el.classList.remove('completed')
-
       return
     } else {
       this._completedTodos.push(item)
@@ -150,8 +144,12 @@ export class TodoList {
 
   private _getTodoItems() {
     const todos = this._getTodosForNow()
-    return todos.map(todoGroup => todoGroup.items.map(item => `<li class=${this._completedTodos.includes(item) ? 'completed' : ''}>${item}</li>`)).flat()
+    return todos.map(todoGroup => todoGroup.items.map(item => `<li class=${this._completedTodos.includes(item) ? 'completed' : ''}>${item}</li>`).join(""))
   }
 }
 
-new TodoList()
+try {
+  new TodoList()
+} catch (e: any) {
+  document.querySelector('textarea')!.textContent = e.toString()
+}
