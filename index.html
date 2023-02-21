@@ -17,10 +17,13 @@
         padding: 0;
       }
     </style>
-    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle.js"></script>
-    <script type="module" src="/src/to-dos.ts"></script>
+    <link rel="stylesheet" href="/src/to-dos.scss">
   </head>
   <body>
-    <to-dos></to-dos>
+    <div id="root">
+      <h1></h1>
+      <ul id="todos"></ul>
+    </div>
   </body>
+  <script type="module" src="/src/to-dos.ts"></script>
 </html>
